@@ -1,0 +1,178 @@
+{% extends 'shop/basic/base.html'%}
+{% load static %}
+
+{% block title %}Web Store - онлайн магазин{% endblock %}
+
+{% block selected_main %}
+selected
+{% endblock %}
+
+{% block content %}
+<!--Вторая секция-->
+        <section class="second-section">
+            <!--Текст слева-->
+            <div class="second-section__left-wrapper">
+                <div class="second-section__title">Интернет-магазин <br>электротехники</div>
+                <div class="second-section__text"><p>На сайте вы найдете широкий ассортимент современных устройств по выгодным ценам! Мы являемся вашим надежным партнером в мире высоких технологий.</p>
+
+                    <p>Наши телефоны — это лучшее сочетание стиля, функциональности и производительности. Мы предлагаем смартфоны от ведущих мировых брендов, которые помогут вам оставаться на связи, работать и развлекаться.</p>
+
+                    <p>Ноутбуки в нашем ассортименте подойдут как для профессиональной работы, так и для игр и развлечений.</p>
+
+                    <p>Сделайте правильный выбор с нами, и ваша жизнь станет более комфортной и интересной с новыми устройствами. </p>
+                    </div>
+            </div>
+
+            <div class="second-section__right-wrapper">
+                <!--Слайдер-->
+                <div id="carouselExampleIndicators" class="carousel slide">
+                    <div class="carousel-indicators">
+                      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    </div>
+                    <div class="carousel-inner">
+                      <div class="carousel-item active">
+                        <img src="{% static 'shop/img/slide 1.jpg' %}" class="d-block w-100" alt="...">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="{% static 'shop/img/slide 2.webp' %}" class="d-block w-100" alt="...">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="{% static 'shop/img/slide 3.webp' %}" class="d-block w-100" alt="...">
+                      </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                      <img src="{% static 'shop/icons/left-arrow (1) 1.svg' %}" class="arrows">
+                      <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                        <img src="{% static 'shop/icons/left-arrow (1) 2.svg' %}" class="arrows">
+                      <span class="visually-hidden">Next</span>
+                    </button>
+                  </div>
+                  <!--Discount-->
+                  <div class="second-section__discount">
+                    <img src="{% static 'shop/img/discount.svg' %}" alt="Скидка 30%" class="second-section__discount-image">
+                  </div>
+            </div>
+        </section>
+
+        <!--Категории-->
+        <section class="category">
+            <div class="category__title">
+                Категории
+            </div>
+            <div class="category__items">
+
+                <div class="category__item">
+                    <a href="{{categories.0.get_absolute_url}}">
+                        <img src="{% static 'shop/img/ba97b2f3e3add08c0e13a6a88ad1f5fe-removebg-preview 1.svg' %}" class="img-iphone">
+                        <p class="category__text">Телефоны</p>
+                    </a>
+                </div>
+
+                <div class="category__item">
+                    <a href="{{categories.1.get_absolute_url}}">
+                        <img src="{% static 'shop/img/1666940343-ipad-10th-generation-q123-cellular-silver-pdp-image-position-1b-wwce-removebg-preview 1.svg' %}" class="img-ipad">
+                        <p class="category__text">Планшеты</p>
+                    </a>
+                </div>
+
+                <div class="category__item">
+                    <a href="{{categories.2.get_absolute_url}}">
+                        <img src="{% static 'shop/img/fa62bc1a74240e5da7628b2694592558-removebg-preview 1.svg' %}" class="img-mac">
+                        <p class="category__text">Ноутбуки</p>
+                    </a>
+                </div>
+
+
+                <div class="category__item">
+                    <a href="{{categories.3.get_absolute_url}}">
+                        <img src="{% static 'shop/img/Без_названия-removebg-preview 1.svg' %}" class="img-ps">
+                        <p class="category__text">Приставки</p>
+                    </a>
+                </div>
+
+                <div class="category__item">
+                    <a href="{{categories.4.get_absolute_url}}">
+                        <img src="{% static 'shop/img/MERCHZevsA135Mon20 1.svg' %}" class="img-pc">
+                        <p class="category__text">Персональные компьютеры</p>
+                    </a>
+                </div>
+
+                <div class="category__item">
+                    <a href="{{categories.5.get_absolute_url}}">
+                        <img src="{% static 'shop/img/hp_laserjet_pro_mfp_m125-removebg-preview 1.svg' %}" class="img-hp">
+                        <p class="category__text">Принтеры и другое<br> оборудование</p>
+                    </a>
+                </div>
+
+                <div class="category__item">
+                    <a href="{{categories.6.get_absolute_url}}">
+                        <img src="{% static 'shop/img/headphones.svg' %}" class="img-headphones">
+                        <p class="category__text">Наушники</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!--Преимущества-->
+        <section class="advantage">
+            <p class="advantage__title">Наши преимущества</p>
+            <div class="advantage__block">
+
+                <div class="advantage__item">
+                    <div class="advantage__item-border">
+                        <img src="{% static 'shop/icons/shipped.png' %}" class="advantage__image">
+                    </div>
+                    <p class="advantage__text">Быстрая доставка</p>
+                </div>
+
+                <div class="advantage__item">
+                    <div class="advantage__item-border">
+                        <img src="{% static 'shop/icons/advantage_discount.png' %}" class="advantage__image">
+                    </div>
+                    <p class="advantage__text">Выгодные скидки</p>
+                </div>
+
+                <div class="advantage__item">
+                    <div class="advantage__item-border">
+                        <img src="{% static 'shop/icons/technical-support.png' %}" class="advantage__image">
+                    </div>
+                    <p class="advantage__text">Служба поддержки<br>работает оперативно</p>
+                </div>
+
+                <div class="advantage__item">
+                    <div class="advantage__item-border">
+                        <img src="{% static 'shop/icons/advantage_return.png' %}" class="advantage__image">
+                    </div>
+                    <p class="advantage__text">Возврат товара<br> в течении 30 дней</p>
+                </div>
+            </div>
+        </section>
+
+        <!--Отзывы-->
+        <section class="review">
+            <p class="review__title">Отзывы</p>
+            {% for review in reviews %}
+                <div class="review__block {% if forloop.last %} review__block-last{% endif %}">
+                    <div class="review__border">
+                        <div class="review__content">
+                            <p class="review__name">{{review.name}}</p>
+                            <span class="review__date">Дата: {{ review.created|date:'d.m.Y в H:i' }}</span>
+                            <span class="review__text">{{ review.content }}</span>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="review__block-last">Отзывов пока что нет. Чтобы добавить отзыв, нажмите на кнопку ниже.</p>
+            {% endfor %}
+
+            <a href="{% url 'store_reviews' %}" class="inline-link">
+                <div class="review__all">
+                    <p class="review__all-text">Все отзывы</p>
+                </div>
+            </a>
+        </section>
+{% endblock %}

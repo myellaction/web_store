@@ -1,0 +1,91 @@
+{% extends 'shop/basic/base.html'%}
+{% load static %}
+{% load site_filters_tags %}
+{% block title %}Web Store - оформление заказа{% endblock %}
+
+
+{% block content %}
+    <!--Сделать заказ-->
+    <section class="order-section">
+        <form method="post">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                   <div class="register-section__password-requirements errors-block">
+                        <img src="{% static 'shop/icons/password-error.png' %}" class="error-password-image mr-6">
+                        <span class="error-register-message">{{ error }}</span>
+                   </div>
+                {% endfor %}
+            {% endif %}
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+            <p class="order-section__title">{{ item.title }}</p>
+            <div class="order-section__block">
+                <div class="order-section__image-price-block">
+                    <div class="order-section__order-image-block">
+                        <img src="{{item.image.url}}" class="account-section__order-image">
+                    </div>
+                    <div class="order-section__count-price-block">
+                        <div class="order-section__count-block">
+                            <span><label for="{{ form.amount.id_for_label }}">{{form.amount.label}}</label></span>
+                            {{form.amount}}
+                            {% if form.amount.errors %}
+                                {% for error in form.amount.errors %}
+                                    <div class="register-section__password-requirements errors-block">
+                                        <img src="{% static 'shop/icons/password-error.png' %}" class="error-password-image mr-6">
+                                        <span class="error-register-message">{{ error }}</span>
+                                   </div>
+                                {% endfor %}
+                            {% endif %}
+                            <span>шт.</span>
+                        </div>
+                        <div class="order-section__price-block">
+                            <span>Цена</span>
+                            <span>{{ item.price|make_num_space }} грн.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-section__delivery-address">
+                    <div class="order-section__delivery">
+                        <label for="{{form.delivery.id_for_label}}">{{form.delivery.label}}</label>
+                        {{form.delivery}}
+                        {% if form.delivery.errors %}
+                            {% for error in form.delivery.errors %}
+                                <div class="register-section__password-requirements errors-block">
+                                    <img src="{% static 'shop/icons/password-error.png' %}" class="error-password-image mr-6">
+                                    <span class="error-register-message">{{ error }}</span>
+                               </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="order-section__address">
+                        <label for="{{form.address.id_for_label}}">{{form.address.label}}</label>
+                        {{form.address}}
+                        {% if form.address.errors %}
+                            {% for error in form.address.errors %}
+                                <div class="register-section__password-requirements errors-block">
+                                    <img src="{% static 'shop/icons/password-error.png' %}" class="error-password-image mr-6">
+                                    <span class="error-register-message">{{ error }}</span>
+                               </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <label for="{{form.comment.id_for_label}}" class="order-section__textarea-label">{{form.comment.label}}</label>
+                {{form.comment}}
+                {% if form.comment.errors %}
+                    {% for error in form.comment.errors %}
+                        <div class="register-section__password-requirements errors-block">
+                            <img src="{% static 'shop/icons/password-error.png' %}" class="error-password-image mr-6">
+                            <span class="error-register-message">{{ error }}</span>
+                       </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <button type="submit" class="order-section__button-make-order">Сделать заказ</button>
+        </form>
+    </section>
+{% endblock %}

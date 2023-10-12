@@ -1,0 +1,47 @@
+{% extends 'shop/basic/profile_base.html' %}
+{% load static %}
+{% load site_filters_tags %}
+
+{% block title %}
+Web Store - избранное
+{% endblock %}
+
+{% block profile_orders %}
+menu-block-active
+{% endblock %}
+
+{% block profile_content %}
+    <!--Мои заказы-->
+    <div class="account-section__right-wrapper">
+        <p class="account-section__right-wrapper__title">Заказы</p>
+        <div class="account-section__orders">
+            {% for order in orders %}
+                <!--Заказ-->
+                <div class="account-section__order">
+                    <p class="account-section__order-title"> №{{ order.pk }} от {{order.created|date:'d.m.Y'}}</p>
+                    <div class="account-section__order-block">
+                        <div class="account-section__order-image-block">
+                            <img src="{{order.item.image.url}}" class="account-section__order-image">
+                        </div>
+                        <div class="account-section__order-information-all">
+                            <p class="account-section__order-item-title"><a href="{{ order.item.get_absolute_url }}">{{order.item.title}}</a></p>
+                            <div class="account-section__order-information-after-title">
+                                <div class="account-section__order-information">
+                                    <p class="account-section__order-count">Количество: {{order.amount}} шт.</p>
+                                    <p class="account-section__order-price">Сумма: {{order.total_price|make_num_space}} грн.</p>
+                                </div>
+                                <div class="account-section__order-status-delivery">
+                                    <p class="account-section__order-status">Статус: {{order.status}}</p>
+                                    <p class="account-section__order-delivery">Способ доставки: {{order.delivery}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                Заказов еще нет
+            {% endfor %}
+        </div>
+
+    </div>
+{% endblock %}

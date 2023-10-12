@@ -1,0 +1,46 @@
+{% extends 'shop/basic/profile_base.html' %}
+{% load static %}
+{% load site_filters_tags %}
+
+{% block title %}
+Web Store - избранное
+{% endblock %}
+
+{% block profile_favorites %}
+menu-block-active
+{% endblock %}
+
+{% block profile_content %}
+    <!--Избранное-->
+    <div class="account-section__right-wrapper">
+        <p class="account-section__right-wrapper__title">Избранное</p>
+        <div class="account-section__favorites">
+            {% for favorite in favorites %}
+                <!--Товар-->
+                <div class="account-section__order account-section__favorite-item">
+                    <div class="account-section__order-image-block">
+                        <img src="{{favorite.item.image.url}}" class="account-section__order-image">
+                    </div>
+                    <div class="account-section__order-information account-section__favorite-information">
+                        <p class="account-section__order-item-title account-section__favorite-item-title">
+                            <a href="{{ favorite.item.get_absolute_url }}">{{favorite.item.title}}</a>
+                        </p>
+                        <p class="account-section__favorite-price">Цена: {{ favorite.item.price|make_num_space }} грн.</p>
+                    </div>
+                    <div class="account-section__favorites-buttons">
+                        <a href="{% url 'to_shop_cart' pk=favorite.item.pk %}"><button class="favorite-add-button" type="button">В корзину</button></a>
+                        <a href="{% url 'remove_from_favorites' pk=favorite.pk %}"><button class="favorite-remove-button" type="button">Удалить</button></a>
+                    </div>
+                </div>
+            {% empty %}
+                Список пустой
+            {% endfor %}
+
+
+        </div>
+        {% if favorites %}
+            <a href="{% url 'remove_from_favorites_all' %}"><button type="button" class="account-section__favorite-clear">Очистить</button></a>
+        {% endif %}
+
+    </div>
+{% endblock %}

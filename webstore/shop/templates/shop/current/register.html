@@ -1,0 +1,76 @@
+{% extends 'shop/basic/base.html'%}
+{% load static %}
+{% block title %}Web Store - регистрация{% endblock %}
+
+{% block selected_about %}
+
+{% endblock %}
+
+{% block content %}
+    <section class="register-section">
+        <p class="register-section__title">Регистрация</p>
+        <form method="post" autocomplete="off">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+                <div class="error-non-field-block">
+                    {% for error in form.non_field_errors %}
+                        <div class="error-non-field-item">
+                            <img src="{% static 'shop/icons/non-field-error.png' %}" alt="" class="error-non-field-image">
+                            <span class="error-field-message non-f-err">{{ error }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% for field in form %}
+                {% if not forloop.last %}
+                    <div class="login-section__username-block register-section__input-block">
+                        <label for="{{field.id_for_label}}">{{field.label}}</label>
+                        {{field}}
+                        {% if field.name == 'password1' %}
+                            {% if request.method == 'GET' %}
+                                {% for desc in field.help_text %}
+                                    <div class="register-section__password-requirements">
+                                        <img src="{% static 'shop/icons/password-requirement.svg' %}">
+                                        <span>{{ desc }}</span>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% else %}
+                            {% if request.method == 'GET' %}
+                                <span>{{ field.help_text }}</span>
+                            {% endif %}
+                        {% endif %}
+                        {% if field.errors %}
+                            {% for error in field.errors %}
+                                <div class="register-section__password-requirements">
+                                    <img src="{% static 'shop/icons/password-error.png' %}" class="error-password-image">
+                                    <span class="error-register-message">{{ error }}</span>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="login-section__username-block register-section__input-block register-section__last-input">
+                        {{field}}
+                        <label class="checkbox-register-label" for="{{field.id_for_label}}">{{field.label}}</label>
+                        {% if request.method == 'GET' %}
+                            <span>{{ field.help_text }}</span>
+                        {% endif %}
+
+                        {% if field.errors %}
+                            {% for error in field.errors %}
+                                <div class="register-section__password-requirements">
+                                    <img src="{% static 'shop/icons/password-error.png' %}" class="error-password-image">
+                                    <span class="error-register-message">{{ error }}</span>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+            <button type="submit" class="register-section__button">Зарегистрироваться</button>
+        </form>
+    </section>
+{% endblock %}
+

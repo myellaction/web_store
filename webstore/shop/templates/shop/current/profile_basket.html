@@ -1,0 +1,83 @@
+{% extends 'shop/basic/profile_base.html' %}
+{% load static %}
+{% load site_filters_tags %}
+
+{% block title %}
+Web Store - моя корзина
+{% endblock %}
+
+{% block profile_basket %}
+menu-block-active
+{% endblock %}
+
+{% block profile_content %}
+    <!--Корзина-->
+    <div class="account-section__right-wrapper">
+        <p class="account-section__right-wrapper__title">Корзина</p>
+        <div class="account-section__basket-items">
+            <form method="post">
+                {% csrf_token %}
+                {{ formset.management_form }}
+                {% if formset.non_form_errors %}
+                    {% for error in formset.non_form_errors %}
+                       <div class="register-section__password-requirements errors-block">
+                            <img src="{% static 'shop/icons/password-error.png' %}" class="error-password-image mr-6">
+                            <span class="error-register-message">{{ error }}</span>
+                       </div>
+                    {% endfor %}
+                {% endif %}
+                    {% for form in formset %}
+                        {% for hidden in form.hidden_fields %}
+                            {{ hidden }}
+                        {% endfor %}
+                        <!--Товар-->
+                        <div class="account-section__basket-item">
+                            {% if form.non_field_errors %}
+                                {% for error in form.non_field_errors %}
+                                   <div class="register-section__password-requirements errors-block">
+                                        <img src="{% static 'shop/icons/password-error.png' %}" class="error-password-image mr-6">
+                                        <span class="error-register-message">{{ error }}</span>
+                                   </div>
+                                {% endfor %}
+                            {% endif %}
+                            <div class="account-section__basket-image-block">
+                                <img src="{{ form.instance.item.image.url }}">
+                            </div>
+                                <div class="account-section__basket-description">
+                                    <a href="{{ form.instance.item.get_absolute_url }}"><p class="account-section__basket-description__title">{{form.instance.item.title}}</p></a>
+                                    <div class="account-section__basket-description__count-block">
+                                        <span class="account-section__basket-description__first-span-count">Количество</span>
+                                        {{form.amount}}
+                                        <span>шт.</span>
+                                        {% for error in form.amount.errors %}
+                                            <div class="register-section__password-requirements errors-block">
+                                                <img src="{% static 'shop/icons/password-error.png' %}" class="error-password-image mr-6">
+                                                <span class="error-register-message">{{ error }}</span>
+                                           </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="account-section__basket-description__price-block">
+                                        <span class="account-section__basket-description__price-title">Цена</span>
+                                        <span>{{form.instance.item.price|make_num_space}} грн.</span>
+                                    </div>
+                                    <div class="account-section__basket-description__buttons">
+                                        <button name="selected" value="{{ form.instance.item.pk }}" type="submit">Купить</button>
+                                        <a href="{% url 'remove_shop_cart_item' pk=form.instance.pk %}">
+                                            <button type="button">Удалить</button>
+                                        </a>
+                                    </div>
+                                </div>
+                        </div>
+                    {% empty %}
+                    Ваша корзина пустая
+                    {% endfor %}
+
+            </form>
+
+        </div>
+        {% if formset.forms %}
+        <a href="{% url 'remove_shop_cart_all' %}"><button type="button" class="account-section__basket-clear-button">Очистить</button></a>
+        {% endif %}
+
+    </div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'shop/basic/base.html'%}
+
+{% block title %}Web Store - api{% endblock %}
+
+
+{% block content %}
+    <section class="about-section api-section">
+        <div class="about-section__block">
+            <p class="about-section__title">API документация</p>
+            <p class="api-section__text">Ссылка формируется следующим образом:<br>
+                <span>{{request.get_host}}/api/</span> + конкретный путь<br>
+                Например, <span>{{request.get_host}}/api/categories/</span> - чтобы получить все категории <br><br>
+                <span>Доступные запросы и их конкретные пути</span>:<br>
+                <span>items/</span> - получить все товары<br>
+                <span>search_item/?content=iphone</span> - найти товар по названию. После <span>?content=</span> нужно написать ключевое слово для поиска<br>
+                <span>brands/</span> - получить всех производителей<br>
+                <span>oper_systems/</span> - получить все операционные системы<br>
+                <span>store_reviews/</span> - получить все отзывы об интернет-магазине (находятся по ссылке <a href="{% url 'store_reviews' %}">{{request.get_host}}/store_reviews/</a>)<br>
+                <span>store_reviews/create/</span> - создать отзыв об интернет магазине. Чтобы создать отзыв, нужно отправить POST запрос (можно через программу Postman) с параметрами: name, email, content.
+                Пример: <br>
+                {'name': 'Иван', 'email': 'ivan@gmail.com', 'content': 'Текст отзыва'}<br>
+                <span>reviews/</span> - получить все отзывы о товарах<br>
+                <span>reviews/create/</span> - создать отзыв о конкретном товаре. Через POST запрос. Параметры, как и в <span>store_reviews/create/</span>,
+                но еще добавляется item - номер товара (pk). Пример:<br>
+                {'name': 'Иван', 'email': 'ivan@gmail.com', 'content': 'Текст отзыва', 'item':9}<br><br>
+                <span>Следующие запросы требуют авторизации при помощи токена</span><br>
+                Чтобы сделать запрос, вам нужно:<br>
+                1. Зарегистрироваться на сайте по <a href="{% url 'register' %}">ссылке</a><br>
+                2. Авторизироваться по <a href="{% url 'token_obtain_pair' %}">ссылке</a><br>
+                3. В Headers (заголовках) запроса добавить заголовок "Authorization" со значением "Bearer &lt;токен&gt;" (токен действует 20 мин.)<br>
+                4. Если закончился срок действия токена, сделать POST запрос по <a href="{% url 'token_refresh' %}">ссылке</a> - получить новый токен при помощи refresh токена (выдается вначале). Передать его в качестве параметра запроса.<br><br>
+                <span>shop_cart/</span> - работа с корзиной. Поддерживаемые запросы:<br>
+                -GET - получить товары, которые добавлены в корзину<br>
+                -POST - добавить товар в корзину. Параметры: {'item': номер_товара, 'amount': количество}<br>
+                -DELETE - удалить товар с корзины. Параметры те же. Если в amount передать -1, то очистится вся корзина.<br><br>
+                <span>favorite_item/</span> - работа с разделом "Избранное". Поддерживаемые запросы:<br>
+                -GET - получить товары, которые добавлены в избранное<br>
+                -POST - добавить товар в избранное. Параметры: {'item': номер_товара}<br>
+                -DELETE - удалить товар с избранного. Параметры те же. Если в amount передать -1, то очистится все содержимое списка избранного.<br><br>
+                <span>order_item/</span> - работа с заказами. Поддерживаемые запросы:<br>
+                -GET - получить заказы пользователя<br>
+                -POST - добавить заказ. Параметры: {'item': номер_товара, 'amount': количество, 'delivery': способ_доставки(1 - Самовывоз, 2 - Новая почта, 3 - Экспресс почта), 'address': адрес, 'comment': комментарий_к_заказу}<br>
+
+
+
+
+            </p>
+        </div>
+    </section>
+{% endblock %}
+

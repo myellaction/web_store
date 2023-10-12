@@ -1,0 +1,22 @@
+<!--Картинки-->
+<div class="catalog-section__right-wrapper__left-part-block">
+    <div class="catalog-section__right-wrapper__image-border">
+        <div class="catalog-section__right-wrapper__card-image-block">
+            <img src="{{ item.image.url }}" class="catalog-section__right-wrapper__card-image">
+        </div>
+    </div>
+
+    <div class="catalog-section__right-wrapper__small-image-block">
+        <img src="{{ item.image.url }}" class="catalog-section__right-wrapper__small-card-image">
+        {% for addition_image in additional_images %}
+            <img src="{{ addition_image.additional_image.url }}" class="catalog-section__right-wrapper__small-card-image">
+        {% endfor %}
+    </div>
+</div>
+
+
+{% for addition_image in additional_images %}
+<div class="carousel-item catalog-section__right-wrapper-slider-item">
+    <img src="{{ additional_image.additional_image.url }}" class="catalog-section__right-wrapper__card-image">
+</div>
+{% endfor %}

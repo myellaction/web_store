@@ -1,0 +1,50 @@
+{% extends 'shop/basic/base.html'%}
+{% load static %}
+
+{% block content %}
+   <!--Аккаунт-->
+        <section class="account-section">
+            <!--Меню аккаунта-->
+            <div class="account-section__left-wrapper">
+                <div class="account-section__name">{{user.first_name|truncatechars:'18' }} </div>
+                <a href="{% url 'profile' pk=user.pk %}">
+                    <div class="account-section__menu-block {% block profile_menu %} {% endblock %}">
+                        <img src="{% static 'shop/icons/my data.svg' %}">
+                        <span>Мои данные</span>
+                    </div>
+                </a>
+                <a href="{% url 'shop_cart' %}">
+                    <div class="account-section__menu-block {% block profile_basket %} {% endblock %}">
+                        <img src="{% static 'shop/icons/cart (1).png' %}">
+                        <span>Моя корзина</span>
+                    </div>
+                </a>
+                <a href="{% url 'orders' %}">
+                    <div class="account-section__menu-block {% block profile_orders %} {% endblock %}">
+                        <img src="{% static 'shop/icons/shopping-list (1).png' %}">
+                        <span>Мои заказы</span>
+                    </div>
+                </a>
+                <a href="{% url 'favorites' %}">
+                    <div class="account-section__menu-block {% block profile_favorites %} {% endblock %}">
+                        <img src="{% static 'shop/icons/heart (5) 1.svg' %}">
+                        <span>Избранное</span>
+                    </div>
+                </a>
+                <a href="{% url 'my_reviews' %}">
+                    <div class="account-section__menu-block account-section__menu-block__last {% block profile_reviews %} {% endblock %}">
+                        <img src="{% static 'shop/icons/talking.png' %}">
+                        <span>Мои отзывы</span>
+                    </div>
+                </a>
+                <a href="https://t.me/api_web_store_bot">
+                    <div class="account-section__send-question">Задать вопрос</div>
+                </a>
+            </div>
+
+            {% block profile_content %}
+
+            {% endblock %}
+        </section>
+{% endblock %}
+

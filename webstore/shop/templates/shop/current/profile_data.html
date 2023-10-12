@@ -1,0 +1,55 @@
+{% extends 'shop/basic/profile_base.html' %}
+{% load static %}
+
+{% block title %}
+Web Store - мои данные
+{% endblock %}
+
+{% block profile_menu %}
+menu-block-active
+{% endblock %}
+
+{% block profile_content %}
+    <!--Информация-->
+    <div class="account-section__right-wrapper">
+        <p class="account-section__right-wrapper__title">Редактировать данные</p>
+        <form method="post">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                   <div class="register-section__password-requirements errors-block">
+                        <img src="{% static 'shop/icons/password-error.png' %}" class="error-password-image mr-6">
+                        <span class="error-register-message">{{ error }}</span>
+                   </div>
+                {% endfor %}
+            {% endif %}
+
+
+            {% for field in form %}
+                {% if not forloop.last %}
+                    <div class="account-section__right-wrapper__input-block">
+                        <label for="{{field.id_for_label}}">{{ field.label }}</label>
+                        {{ field }}
+                {% else %}
+                    <div class="account-section__right-wrapper__input-block profile-checkbox-block">
+                        {{field}}
+                        <label class="checkbox-register-label" for="{{field.id_for_label}}">{{field.label}}</label>
+                {% endif %}
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                        <div class="register-section__password-requirements errors-block">
+                            <img src="{% static 'shop/icons/password-error.png' %}" class="error-password-image mr-6">
+                            <span class="error-register-message">{{ error }}</span>
+                       </div>
+                    {% endfor %}
+                {% endif %}
+                    </div>
+            {% endfor %}
+
+            <div class="account-section__right-wrapper__edit-data-buttons">
+                <button type="submit">Сохранить</button>
+                <a href="{% url 'password_change' %}"><button type="button">Изменить пароль</button></a>
+            </div>
+        </form>
+    </div>
+{% endblock %}

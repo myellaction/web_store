@@ -1,0 +1,17 @@
+{% load static %}
+<!--Путь-->
+<div class="catalog-section__right-wrapper__path-block">
+    {% if request.GET.content %}
+        <span class="catalog-section__right-wrapper__path-text">Результаты поиска</span>
+    {% else %}
+        <a href="{% url 'catalog' %}"><span class="catalog-section__right-wrapper__path-text">Все товары</span></a>
+    {% endif %}
+    {% if current_category %}
+        <img src="{% static 'shop/icons/right-arrow.svg' %}" class="catalog-section__right-wrapper__path-image">
+        <a href="{{ current_category.get_absolute_url }}"><span class="catalog-section__right-wrapper__path-text">{{ current_category.title }}</span></a>
+        {% if item %}
+            <img src="{% static 'shop/icons/right-arrow.svg' %}" class="catalog-section__right-wrapper__path-image">
+            <a href="{{ item.get_absolute_url }}"><span class="catalog-section__right-wrapper__path-text">{{ item.title|truncatechars:'52' }}</span></a>
+        {% endif %}
+    {% endif %}
+</div>

@@ -1,0 +1,21 @@
+<div class="catalog-section__category">
+    <a href="{% url 'catalog' %}"><p class="catalog-section__category__title">Категории</p></a>
+    <div class="catalog-section__category__box">
+        {% for category in categories %}
+            <a href="{{ category.get_absolute_url }}">
+            {% if category == current_category %}
+                <div class="catalog-section__category__block category-active">
+            {% else %}
+                <div class="catalog-section__category__block">
+            {% endif %}
+                    <div class="catalog-section__category__block-image">
+                        <img src="{{category.image.url}}" alt="" class="catalog-section__category__image">
+                    </div>
+                    <div class="catalog-section__category__text">{{category.title}}</div>
+                </div>
+            </a>
+        {% endfor %}
+
+
+    </div>
+</div>

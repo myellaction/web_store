@@ -1,0 +1,50 @@
+{% extends 'shop/basic/base.html'%}
+
+{% block title %}Web Store - вход на сайт{% endblock %}
+
+{% block selected_about %}
+
+{% endblock %}
+
+{% block content %}
+    <section class="login-section">
+            <p class="login-section__title">Вход на сайт</p>
+            <form method="post" autocomplete="off">
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                <ul>
+                    {% for error in form.non_field_errors %}
+                        <li class="error-field-message">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <div class="login-section__username-block">
+                    <label for="{{form.username.id_for_label}}">{{form.username.label}}</label>
+                    {{form.username}}
+                    {% if form.username.errors %}
+                        <ul class="errors-block">
+                            {% for error in form.username.errors %}
+                                <li class="error-field-message">{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+                <div class="login-section__password-block">
+                    <label for="{{form.password.id_for_label}}">{{form.password.label}}</label>
+                    {{form.password}}
+                    {% if form.password.errors %}
+                        <ul class="errors-block">
+                            {% for error in form.password.errors %}
+                                <li class="error-field-message">{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+                <div class="login-section__buttons">
+                    <button type="submit">Войти</button>
+                    <a href="{% url 'reset_password' %}"><button type="button">Забыл пароль</button></a>
+                </div>
+            </form>
+        </section>
+{% endblock %}
+

@@ -1,0 +1,90 @@
+{% extends 'shop/basic/base.html'%}
+{% load static %}
+
+{% block title %}Web Store - отзывы{% endblock %}
+
+{% block content %}
+    <section class="review review-section">
+        <p class="review-section__title">Отзывы о компании Web Store</p>
+        {% for review in reviews %}
+            <div class="review__block {% if forloop.last %} review__block-last{% endif %}">
+                <div class="review__border">
+                    <div class="review__content">
+                        <p class="review__name">{{review.name}}</p>
+                        <span class="review__date">Дата: {{ review.created|date:'d.m.Y в H:i' }}</span>
+                        <span class="review__text">{{ review.content }}</span>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="review__block-last">Отзывов пока что нет. Чтобы добавить отзыв, воспользуйтесь формой ниже.</p>
+        {% endfor %}
+        <!--Оставить отзыв-->
+        <div class="catalog-section__send-review">
+            <p class="catalog-section__send-review__title review-section__send-review-title">Оставить отзыв</p>
+            <form method="post">
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                    {% for error in form.non_field_errors %}
+                       <div class="register-section__password-requirements errors-block">
+                            <img src="{% static 'shop/icons/password-error.png' %}" class="error-password-image mr-6">
+                            <span class="error-register-message">{{ error }}</span>
+                       </div>
+                    {% endfor %}
+                {% endif %}
+
+                <div class="catalog-section__send-review__wrapper">
+                    <div class="catalog-section__send-review__name-block">
+                        <label for="{{ form.name.id_for_label }}">{{form.name.label}}</label>
+                        {% if request.user.is_authenticated %}
+                            <div class="simulated-input">{{ form.name.initial }}</div>
+                        {% endif %}
+                            {{ form.name }}
+                            <div class="to-none">{{ form.buyer }}</div>
+
+                        {% if form.name.errors %}
+                            {% for error in form.name.errors %}
+                                <div class="register-section__password-requirements errors-block">
+                                    <img src="{% static 'shop/icons/password-error.png' %}" class="error-password-image mr-6">
+                                    <span class="error-register-message">{{ error }}</span>
+                               </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <div class="catalog-section__send-review__email-block">
+                        <label for="{{ form.email.id_for_label }}">{{form.email.label}}</label>
+                         {% if request.user.is_authenticated %}
+                            <div class="simulated-input">{{ form.email.initial }}</div>
+                        {% endif %}
+                        {{form.email}}
+
+
+                        {% if form.email.errors %}
+                            {% for error in form.email.errors %}
+                                <div class="register-section__password-requirements errors-block errors-block">
+                                    <img src="{% static 'shop/icons/password-error.png' %}" class="error-password-image mr-6">
+                                    <span class="error-register-message">{{ error }}</span>
+                               </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <div class="catalog-section__send-review__text-block">
+                        <label for="{{form.content.id_for_label}}">{{form.content.label}}</label>
+                        {{form.content}}
+                        {% if form.content.errors %}
+                            {% for error in form.content.errors %}
+                                <div class="register-section__password-requirements errors-block">
+                                    <img src="{% static 'shop/icons/password-error.png' %}" class="error-password-image mr-6">
+                                    <span class="error-register-message">{{ error }}</span>
+                               </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="catalog-section__send-review__button">Опубликовать</button>
+                </div>
+            </form>
+        </div>
+    </section>
+{% endblock %}

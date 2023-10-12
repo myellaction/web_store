@@ -1,0 +1,48 @@
+{% extends 'shop/basic/profile_base.html' %}
+{% load static %}
+
+{% block title %}
+Web Store - мои отзывы
+{% endblock %}
+
+{% block profile_reviews %}
+menu-block-active
+{% endblock %}
+
+{% block profile_content %}
+    <!--Отзывы-->
+    <div class="account-section__right-wrapper">
+        <p class="account-section__right-wrapper__title">Отзывы</p>
+        <div class="account-section__my-reviews">
+            {% for review in reviews %}
+                <!--Отзыв-->
+                <div class="account-section__order account-section__my-reviews__block">
+                    <div class="account-section__order-image-block">
+                        <img src="{{ review.item.image.url }}" class="account-section__order-image">
+                    </div>
+                    <div class="account-section__my-reviews__information-block">
+                        <div class="account-section__order-information account-section__my-reviews__review-block">
+                            <p class="account-section__order-item-title account-section__review-item-title">
+                                <a href="{{review.item.get_absolute_url}}">{{review.item.title}}</a>
+                            </p>
+                            <p class="account-section__my-reviews__text">{{review.content}}</p>
+                            <a href="{% url 'remove_item_review_from_account' pk_or_all=review.pk %}" class="account-section__my-reviews__date-button link-button-my-reviews">
+                                <button type="button">Удалить</button>
+                            </a>
+                        </div>
+                        <div class="account-section__my-reviews__date-button">
+                            <p>Дата: {{review.created|date:'d.m.Y'}}</p>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                Вы еще не добавили свой отзыв о товаре
+            {% endfor %}
+
+        </div>
+        {% if reviews %}
+            <a href="{% url 'remove_item_review_from_account' pk_or_all='all' %}"><button type="button" class="account-section__favorite-clear">Очистить</button></a>
+        {% endif %}
+
+    </div>
+{% endblock %}

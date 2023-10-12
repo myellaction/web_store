@@ -1,0 +1,189 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Web Store - онлайн магазин">
+    <link href="{% static 'shop/css/bootstrap.min.css' %}" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'shop/css/style.css' %}">
+    <title>{% block title %}Web Store - онлайн магазин{% endblock %}</title>
+</head>
+<body>
+    <div class="wrapper" id="wrapper">
+        <div class="nav-block">
+            <a href="{% url 'index' %}">
+                <img src="{% static 'shop/icons/Group.svg' %}" class="logo">
+            </a>
+            <div class="nav-block__logo-name">
+                 <a href="{% url 'index' %}">
+                    <div class="green">Web</div>
+                    <div class="red">Store</div>
+                 </a>
+            </div>
+            <div class="nav-block__telephone">
+                <div>+066 XXXXXXX</div>
+                <div>+067 XXXXXXX</div>
+            </div>
+
+            <div class="nav-block__menu">
+                <ul class="nav-block__items">
+                    <a href="{% url 'index' %}">
+                        <li class="nav-block__item {% block selected_main %}{% endblock %}">Главная</li>
+                    </a>
+                    <a href="{% url 'catalog' %}">
+                        <li class="nav-block__item {% block selected_catalog %}{% endblock %}">Каталог</li>
+                    </a>
+                    <a href="{% url 'about' %}">
+                        <li class="nav-block__item {% block selected_about %}{% endblock %}">О нас</li>
+                    </a>
+                    <a href="#contacts"><li class="nav-block__item {% block selected_contacts %}{% endblock %}">Контакты</li></a>
+                </ul>
+            </div>
+        </div>
+
+        <!--Кнопки и поиск-->
+        <div class="icons-search">
+            <!--Кнопки-->
+            {% if not request.user.is_authenticated %}
+                <div class="nav-icons">
+                    <div class="nav-icons__item">
+                        <a href="{% url 'login' %}">
+                            <img src="{% static 'shop/icons/user.png' %}" class="icon-login">
+                            <div class="nav-icons__icon-text text-login">Вход</div>
+                        </a>
+                    </div>
+                    <div class="nav-icons__item">
+                        <a href="{% url 'register' %}">
+                            <img src="{% static 'shop/icons/note (1) 1.svg' %}" class="icon-register">
+                            <div class="nav-icons__icon-text">Регистрация</div>
+                        </a>
+                    </div>
+                    <div class="nav-icons__item">
+                        <a href="{% url 'favorites' %}">
+                            <img src="{% static 'shop/icons/heart-black-shape 1.svg' %}" class="icon-favorite">
+                            <div class="nav-icons__icon-text">Избранное</div>
+                        </a>
+                    </div>
+                    <div class="nav-icons__item">
+                        <a href="{% url 'shop_cart' %}">
+                            <img src="{% static 'shop/icons/shopping-carts 1.svg' %}" class="icon-shopping">
+                            <div class="nav-icons__icon-text">Корзина</div>
+                        </a>
+                    </div>
+                    <div class="nav-icons__item">
+                        <a href="{% url 'api_documentation' %}">
+                            <img src="{% static 'shop/icons/api.png' %}" class="icon-shopping">
+                            <div class="nav-icons__icon-text">Запросы</div>
+                        </a>
+                    </div>
+                </div>
+            {% else %}
+                <div class="nav-icons">
+                    <div class="nav-icons__item">
+                        <a href="{% url 'profile' pk=user.pk %}">
+                            <img src="{% static 'shop/icons/logined.svg' %}" class="icon-login">
+                            <div class="nav-icons__icon-text text-login">Профиль</div>
+                        </a>
+                    </div>
+                    <div class="nav-icons__item">
+                        <a href="{% url 'logout' %}">
+                            <img src="{% static 'shop/icons/logout.svg' %}" class="icon-register">
+                            <div class="nav-icons__icon-text">Выход</div>
+                        </a>
+                    </div>
+                    <div class="nav-icons__item">
+                        <a href="{% url 'favorites' %}">
+                            <img src="{% static 'shop/icons/heart-black-shape 1.svg' %}" class="icon-favorite">
+                            <div class="nav-icons__icon-text">Избранное</div>
+                        </a>
+                    </div>
+                    <div class="nav-icons__item">
+                        <a href="{% url 'shop_cart' %}">
+                            <img src="{% static 'shop/icons/shopping-carts 1.svg' %}" class="icon-shopping">
+                            <div class="nav-icons__icon-text">Корзина</div>
+                        </a>
+                    </div>
+                    <div class="nav-icons__item">
+                        <a href="{% url 'api_documentation' %}">
+                            <img src="{% static 'shop/icons/api.png' %}" class="icon-shopping">
+                            <div class="nav-icons__icon-text">Запросы</div>
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+            <!--Поиск-->
+            <div class="search-block">
+                <form method="get" action="{% url 'catalog' %}">
+                    {{search_form.content}}
+                <button class="search-block__button" type="submit"><img src="{% static 'shop/icons/magnifier_2866321 1.svg' %}"></button>
+                </form>
+            </div>
+        </div>
+        {% if messages %}
+            {% for message in messages %}
+                <p class="{{ message.level_tag }}">{{ message.message }}</p>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+    </div>
+    <!--Футер-->
+    <footer class="footer-wrapper" id="contacts">
+        <div class="footer-section">
+            <!--Блоки-->
+            <div class="footer-section__blocks">
+                <div class="footer-section__block">
+                    <p class="footer-section__block-title">График работы</p>
+                    <p class="footer-section__block-first-column">Пн - Пт<br>Сб<br>Вс</p>
+                    <p class="footer-section__block-second-column">с 9:00 до 18:00<br>с 10:00 до 17:00<br>выходной</p>
+                </div>
+
+                <div class="footer-section__block">
+                    <p class="footer-section__block-title">Телефоны</p>
+                    <p class="footer-section__block-item">+066 XXXXXXX</p>
+                    <p class="footer-section__block-item">+067 XXXXXXX</p>
+                </div>
+
+                <div class="footer-section__block">
+                    <p class="footer-section__block-title">Контактное лицо</p>
+                    <p class="footer-section__block-item">Сергей Викторович,</p>
+                    <p class="footer-section__block-item">менеджер по продажам</p>
+                    
+                </div>
+
+                <div class="footer-section__block">
+                    <p class="footer-section__block-title">Адрес</p>
+                    <p class="footer-section__block-item">10000, г. Киев,</p>
+                    <p class="footer-section__block-item">ул. Восток</p>
+                </div>
+            </div>
+            <!--Задать вопрос-->
+            <div class="footer-section__ask-block">
+                <a href="https://t.me/api_web_store_bot" class="footer-section__ask-link">
+                    <img class="footer-section__ask-image" src="{% static 'shop/icons/telegram 1.svg' %}">
+                    <span class="footer-section__ask-text">Задать вопрос через Телеграм бота</span>
+                </a>
+            </div>
+            <p class="footer-section__text-description">Сайт является прототипом интернет магазина.<br> Разработан на Django с использованием Django Rest Framework, PostgreSQL, Bootstrap, HTML, CSS. Шаблон сделан при помощи Figma.</p>
+            <div class="footer-section__protected">
+                <span>Ⓒ Все права защищены</span>
+            </div>
+        </div>
+    </footer>
+
+
+
+
+<script src="{% static 'shop/js/bootstrap.bundle.min.js' %}" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="{% static 'shop/js/not_empty_filter.js' %}"></script>
+<script>
+    $('#disable-btn').click(function () {
+            $('body').scrollspy('dispose');
+        });
+
+</script>
+</body>
+</html>

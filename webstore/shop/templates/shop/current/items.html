@@ -1,0 +1,257 @@
+{% extends 'shop/basic/base.html'%}
+{% load static %}
+{% load site_filters_tags %}
+
+{% block title %}
+{% if not current_category %}
+Web Store - каталог
+{% else %}
+Web Store - {{ current_category.title }}
+{% endif %}
+{% endblock %}
+
+{% block selected_catalog %}
+selected
+{% endblock %}
+
+{% block content %}
+
+<div class="catalog-section">
+    <!--Левый блок меню-->
+    <div class="catalog-section__left-wrapper">
+
+        <!--Категории-->
+        {% include 'shop/basic/categories_block.html' %}
+
+        {% if current_category %}
+            <!--Сортировка-->
+            <div class="catalog-section__category">
+            <p class="catalog-section__category__title">Сортировка</p>
+
+            <div class="catalog-section__category__box">
+
+                <a href="{% make_sort_url value=request.get_full_path sorting='increase' %}">
+                    <div class="catalog-section__category__block {% if sorting == 'increase' %} category-active {% endif %}">
+                        <div class="catalog-section__category__block-image">
+                            <img src="{% static 'shop/icons/top arrow.svg' %}" alt="" class="catalog-section__category__image">
+                        </div>
+                        <div class="catalog-section__category__text">Возростание цены </div>
+                    </div>
+                </a>
+
+                <a href="{% make_sort_url value=request.get_full_path sorting='decrease' %}">
+                    <div class="catalog-section__category__block {% if sorting == 'decrease' %} category-active {% endif %}">
+                        <div class="catalog-section__category__block-image">
+                            <img src="{% static 'shop/icons/bottom arrow.svg' %}" alt="" class="catalog-section__category__image">
+                        </div>
+                        <div class="catalog-section__category__text {% if sorting == 'decrease' %} category-active {% endif %}">Убывание цены</div>
+                    </div>
+                </a>
+
+                <a href="{% make_sort_url value=request.get_full_path sorting='reviews' %}">
+                    <div class="catalog-section__category__block {% if sorting == 'reviews' %} category-active {% endif %}">
+                        <div class="catalog-section__category__block-image">
+                            <img src="{% static 'shop/icons/bottom arrow.svg' %}" alt="" class="catalog-section__category__image">
+                        </div>
+                        <div class="catalog-section__category__text {% if sorting == 'reviews' %} category-active {% endif %}">Количество отзывов</div>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+
+            <!--Фильтры-->
+            <div class="catalog-section__category category-last-block">
+            <p class="catalog-section__category__title">Фильтры</p>
+
+            <div class="catalog-section__category__box">
+                <form method="get" id="form_filter_items">
+
+                    <!--Производитель-->
+                    <div class="catalog-section__category__block block_new-padding">
+                        <div class="catalog-section__category__block-image">
+                            <img src="{% static  'shop/icons/right-arrow.svg' %}" alt="" class="catalog-section__category__image">
+                        </div>
+                        <div class="catalog-section__category__text">Производитель</div>
+                        <div class="catalog-section__category__new-string-new-first"></div>
+                        {% for brand_item in brands %}
+                            <div class="catalog-section__category__box-filter">
+                                <label for="{{brand_item.slug}}" class="newfilter-label">
+                                    <input type="checkbox" name="brand" id="{{ brand_item.slug }}" value="{{ brand_item.slug }}" {% if brand_item.slug in brand %} checked {% endif %}>
+                                    <span>{{brand_item.title}}</span>
+                                </label>
+                            </div>
+                            <div class="catalog-section__category__new-string-new"></div>
+                        {% endfor %}
+
+                    </div>
+
+                    <!--Цена-->
+                    {% check_price_value min_price=min_price max_price=max_price min_price_default=min_price_default max_price_default=max_price_default as res_check_price%}
+                    <div class="catalog-section__category__block block_new-padding">
+                        <div class="catalog-section__category__block-image">
+                            <img src="{% static 'shop/icons/right-arrow.svg' %}" alt="" class="catalog-section__category__image">
+                        </div>
+                        <div class="catalog-section__category__text">Цена </div>
+                        <div class="catalog-section__category__new-string-new-price"></div>
+
+                        <div class="catalog-section__category__box-input">
+                            <input class="catalog-section__category__input" onkeyup="this.value = this.value.replace(/[^\d]/g,'');" placeholder="{{min_price_default}}" name="min_price" {% if res_check_price %} value="{{ min_price }}" {% endif %}>
+                            <div></div>
+                            <input class="catalog-section__category__input" onkeyup="this.value = this.value.replace(/[^\d]/g,'');" placeholder="{{ max_price_default }}" name="max_price" {% if res_check_price %} value="{{ max_price }}" {% endif %}>
+                        </div>
+
+                    </div>
+                    {% if opersystems %}
+                        <!--Операционная система-->
+                        <div class="catalog-section__category__block block_new-padding">
+                        <div class="catalog-section__category__block-image">
+                            <img src="{% static 'shop/icons/right-arrow.svg' %}" alt="" class="catalog-section__category__image">
+                        </div>
+                        <div class="catalog-section__category__text">Операционная система </div>
+                        <div class="catalog-section__category__new-string-new-first"></div>
+
+                        {% for system_item in opersystems %}
+                            <div class="catalog-section__category__box-filter">
+                                <label for="{{ system_item.slug }}" class="newfilter-label">
+                                        <input type="checkbox" name="opersystem" id="{{ system_item.slug }}" value="{{ system_item.slug }}" {% if system_item.slug in opersystem %} checked {% endif %}>
+                                        <span>{{ system_item.title }}</span>
+                                </label>
+                            </div>
+                            <div class="catalog-section__category__new-string-new"></div>
+                        {% endfor %}
+
+                    </div>
+                    {% endif %}
+                    <!--Наличие-->
+                    <div class="catalog-section__category__block block_new-padding">
+                        <div class="catalog-section__category__block-image">
+                            <img src="{% static 'shop/icons/right-arrow.svg' %}" alt="" class="catalog-section__category__image">
+                        </div>
+                        <div class="catalog-section__category__text">Наличие </div>
+
+                        <div class="catalog-section__category__new-string-new-first"></div>
+
+                        <div class="catalog-section__category__box-filter">
+                            <label for="available_yes" class="newfilter-label">
+                                    <input type="checkbox" name="available" id="available_yes" value="available_yes" {% if 'available_yes' in available %} checked {% endif %}>
+                                    <span>есть</span>
+                            </label>
+                        </div>
+                        <div class="catalog-section__category__new-string-new"></div>
+
+                        <div class="catalog-section__category__box-filter">
+                            <label for="available_no" class="newfilter-label">
+                                    <input type="checkbox" name="available" id="available_no" value="available_no" {% if 'available_no' in available %} checked {% endif %}>
+                                    <span>ожидается</span>
+                            </label>
+                        </div>
+                        <div class="catalog-section__category__new-string-new"></div>
+                        <button id="button_filter_items" class="catalog-section__category__filter-button" type="submit">Применить</button>
+
+                    </div>
+
+
+                </form>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+
+    <!--Правый блок товары-->
+    <div class="catalog-section__right-wrapper">
+        <!--Путь-->
+        {% include 'shop/basic/catalog_path.html' %}
+        <!--Товары-->
+        <div class="catalog-section__right-wrapper__items-block">
+            {% for item in items %}
+                <div class="catalog-section__right-wrapper__item">
+                    <div class="catalog-section__right-wrapper__image-block">
+                        <a href="{{item.get_absolute_url}}"><img src="{{ item.image.url }}" class="catalog-section__right-wrapper__item-image"></a>
+                        <a href="{% make_like_link value=request.get_full_path item_id=item.pk %}">
+                            {% if not item.like %}
+                                <img src="{% static 'shop/icons/empty_heart.svg' %}" class="catalog-section__right-wrapper__like">
+                            {% else %}
+                                <img src="{% static 'shop/icons/filled_heart.svg' %}" class="catalog-section__right-wrapper__like">
+                            {% endif %}
+                        </a>
+                    </div>
+                    <a href="{{ item.get_absolute_url }}"><p class="catalog-section__right-wrapper__title">{{ item.title|my_truncatechars:'54' }}</p></a>
+                    <div class="catalog-section__right-wrapper__code-available">
+                        <span class="catalog-section__right-wrapper__code">код товара: {{ item.pk }}</span>
+                        {% if item.available %}
+                            <img src="{% static 'shop/icons/accept (1) 1.svg' %}" class="catalog-section__right-wrapper__available-image">
+                            <span class="catalog-section__right-wrapper__available-text">есть в наличии</span>
+                        {% else %}
+                            <img src="{% static 'shop/icons/not-in-store.png' %}" class="catalog-section__right-wrapper__available-image">
+                            <span class="catalog-section__right-wrapper__available-text">нет в наличии</span>
+                        {% endif %}
+                    </div>
+                    <div class="catalog-section__right-wrapper__price-buy">
+                        <span class="catalog-section__right-wrapper__price">{{ item.price|make_num_space }} грн.</span>
+                        <a href="{{ item.get_absolute_url }}{% if item.review_set.all %}#watch_review {% else %}#make_review {% endif %}">
+                            <img src="{% static 'shop/icons/comments 1.png' %}" class="catalog-section__right-wrapper__review-image">
+                        </a>
+                        {% if item.shop_cart %}
+                            <img src="{% static 'shop/icons/shopping-cart.png' %}" class="catalog-section__right-wrapper__buy-image">
+                        {% else %}
+                            <a href="{% make_cart_link value=request.get_full_path item_id=item.pk %}"><img src="{% static 'shop/icons/add-to-cart.png' %}" class="catalog-section__right-wrapper__buy-image"></a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% empty %}
+                По вашему запросу ничего не найдено
+            {% endfor %}
+
+
+        </div>
+
+        {% if page_obj.has_other_pages %}
+            <nav class="list-pages-items-block">
+                <ul class="list-pages-items">
+                {% for p in paginator.page_range %}
+                    {% if page_obj.number == p %}
+                        <li class="page-num page-num-selected">
+                            {{ p }}
+                        </li>
+                    {% elif p >= page_obj.number|add:-2 and p <= page_obj.number|add:2 %}
+                        <li class="page-num">
+                            <a href="{% make_page_link value=request.get_full_path page=p %}">{{ p }}</a>
+                        </li>
+                    {% elif p == page_obj.number|add:-3 or p == page_obj.number|add:3 %}
+                        {% if p != paginator.num_pages and p != 1 and p != 2 and p != paginator.num_pages|add:-1 %}
+                            <li class="page-num">
+                                <a href="{% make_page_link value=request.get_full_path page=p %}">...</a>
+                            </li>
+                        {% else %}
+                            <li class="page-num">
+                                <a href="{% make_page_link value=request.get_full_path page=p %}">{{p}}</a>
+                            </li>
+                        {% endif %}
+                    {% elif p == paginator.num_pages or p == 1 %}
+                        <li class="page-num">
+                            <a href="{% make_page_link value=request.get_full_path page=p %}">{{ p }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+
+
+
+            </ul>
+
+
+        </nav>
+        {% endif %}
+
+    </div>
+
+
+
+</div>
+
+
+
+
+{% endblock %}

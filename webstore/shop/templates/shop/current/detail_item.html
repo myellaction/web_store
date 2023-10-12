@@ -1,0 +1,225 @@
+{% extends 'shop/basic/base.html'%}
+{% load static %}
+{% load site_filters_tags %}
+
+{% block title %}{{item.title}}{% endblock %}
+
+{% block selected_catalog %}
+selected
+{% endblock %}
+
+{% block content %}
+    <div class="catalog-section">
+
+        <!--Левый блок меню-->
+        <div class="catalog-section__left-wrapper">
+
+            <!--Категории-->
+            {% include 'shop/basic/categories_block.html' %}
+
+        </div>
+
+        <!--Правый блок товары-->
+        <div class="catalog-section__right-wrapper">
+
+            <!--Путь-->
+            {% include 'shop/basic/catalog_path.html' %}
+
+            <!--Карточка товара-->
+            <div class="catalog-section__right-wrapper__card-section">
+                <div class="catalog-section__right-wrapper__card-wrapper">
+
+                <!--Слайдер-->
+                <div class="catalog-section__right-wrapper__left-part-block">
+                    <div class="catalog-section__right-wrapper__image-border">
+                        <div id="carouselExampleIndicators" class="carousel slide catalog-section__right-wrapper-slider">
+                            <div class="carousel-inner">
+                              <div class="carousel-item catalog-section__right-wrapper-slider-item active">
+                                <img src="{{ item.image.url }}" class="catalog-section__right-wrapper__card-image">
+                              </div>
+                              {% for additional_image in additional_images %}
+                                <div class="carousel-item catalog-section__right-wrapper-slider-item">
+                                    <img src="{{ additional_image.additional_image.url }}" class="catalog-section__right-wrapper__card-image">
+                                </div>
+                              {% endfor %}
+                            </div>
+
+                        </div>
+                    </div>
+
+                        <div class="catalog-section__right-wrapper__small-image-block">
+                            <img src="{{ item.image.url }}" class="catalog-section__right-wrapper__small-card-image active" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" aria-current="true" aria-label="Slide 1">
+                            {% for additional_image in additional_images %}
+                                <img src="{{ additional_image.additional_image.url }}" class="catalog-section__right-wrapper__small-card-image" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ forloop.counter }}" aria-label="Slide {{forloop.counter|add:'1'}}">
+                            {% endfor %}
+                        </div>
+
+                </div>
+
+                    <!--Правая часть карточки-->
+                    <div class="catalog-section__right-wrapper__right-part-block">
+                        <p class="catalog-section__right-wrapper__right-part-title">{{ item.title }}</p>
+                        <div class="catalog-section__right-wrapper__right-part-code-block">
+                            <span class="catalog-section__right-wrapper__right-part-code">Код товара: {{ item.pk }}</span>
+                            {% if item.available %}
+                                <img src="{% static 'shop/icons/accept (1) 1.svg' %}">
+                                <span>есть в наличии</span>
+                            {% else %}
+                                <img src="{% static 'shop/icons/not-in-store.png' %}">
+                                <span>нет в наличии</span>
+                            {% endif %}
+                        </div>
+                        <div class="catalog-section__right-wrapper__right-part-price-block">
+                            <span class="catalog-section__right-wrapper__price-text">Цена</span>
+                            <span class="catalog-section__right-wrapper__price">{{item.price|make_num_space}} грн.</span>
+                        </div>
+                        <div class="catalog-section__right-wrapper__right-part-review-block">
+                            <span class="catalog-section__right-wrapper__reviews-text">Отзывы</span>
+                            <span class="catalog-section__right-wrapper__count-reviews">{% if item_reviews.count > 0 %} {{ item_reviews.count }} {% else %} отзывов еще нет {% endif %}</span>
+                            <img src="{% static 'shop/icons/comments 1.png' %}" class="catalog-section__right-wrapper__right-part-review-image">
+                        </div>
+                        <form method="post">
+                            {% csrf_token %}
+                            {% for hidden in form_buy.hidden_fields %}
+                                {{ hidden }}
+                            {% endfor %}
+                            <div class="catalog-section__right-wrapper__count-block">
+                                <label class="catalog-section__right-wrapper__first-span-count" for="{{ form.amount.id_for_label }}">{{ form_buy.amount.label }}</label>
+                                {{form_buy.amount}}
+                                <span>шт.</span>
+                            </div>
+                            <button type="submit" class="catalog-section__right-wrapper__buy">Купить</button>
+                        </form>
+
+                    </div>
+                    <!--Описание-->
+                    <div class="catalog-section__right-wrapper__card-description">
+                        <p class="catalog-section__right-wrapper__description-title">
+                            Описание
+                        </p>
+                        <div class="catalog-section__right-wrapper__description-text">
+                            {{ item.description }}
+                        </div>
+                    </div>
+
+
+                </div>
+                <!--Отзывы-->
+                {% if item_reviews %}
+                    <div id="watch_review" class="catalog-section__reviews-wrapper">
+                        <p class="catalog-section__reviews-title">Отзывы о товаре</p>
+                            <div class="review catalog-section__review">
+                                {% for item_review in item_reviews %}
+                                    <div class="review__block catalog-section__review-block">
+                                        <div class="review__border">
+                                            <div class="review__content catalog-section__review-content">
+                                                <p class="review__name catalog-section__review-name">{{ item_review.name }}</p>
+                                                <span class="review__date catalog-section__review-date">Дата: {{item_review.created|date:'d.m.Y в H:i'}}</span>
+                                                <span class="review__text catalog-section__review-text">{{item_review.content}}</span>
+                                            </div>
+                                            <div class="item-review-buttons-block">
+                                                {% if user.is_superuser or item_review.buyer.user.pk == user.pk %}
+                                                    <a href="{% url 'remove_item_review' pk_item=item.pk slug_item=item.slug pk=item_review.pk %}"><button type="button" class="catalog-section__answer-review-button">Удалить</button></a>
+                                                {% endif %}
+                                                <a href="{{ item.get_absolute_url }}?to_review={{ item_review.pk }}/#make_review"><button type="button" class="catalog-section__answer-review-button review-answer-button">Ответить</button></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% for answer in item_review.child.all|dictsort:'pk' %}
+                                        <div class="review__block catalog-section__review-block catalog-section__review-sub-block">
+                                            <div class="review__border">
+                                                <div class="review__content catalog-section__review-content">
+                                                    <p class="review__name catalog-section__review-name">{{ answer.name }}</p>
+                                                    <span class="review__date catalog-section__review-date">Дата: {{answer.created|date:'d.m.Y в H:i'}}</span>
+                                                    <span class="review__text catalog-section__review-text">{{ answer.content }}</span>
+                                                </div>
+                                                {% if user.is_superuser or answer.buyer.user.pk == user.pk %}
+                                                    <div class="item-review-buttons-block small-review-buttons-block">
+                                                        <a href="{% url 'remove_item_review' pk_item=item.pk slug_item=item.slug pk=answer.pk %}"><button type="button" class="catalog-section__answer-review-button">Удалить</button></a>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% endfor %}
+
+                        </div>
+                    </div>
+                {% endif %}
+                    <!--Оставить отзыв-->
+                    <div id="make_review" class="catalog-section__send-review">
+                        <p class="catalog-section__send-review__title">Оставить отзыв</p>
+                        <form method="post">
+                            {% csrf_token %}
+                            {% if form.non_field_errors %}
+                                {% for error in form.non_field_errors %}
+                                    <div class="register-section__password-requirements errors-block">
+                                        <img src="{% static 'shop/icons/password-error.png' %}" class="error-password-image mr-6">
+                                        <span class="error-register-message">{{ error }}</span>
+                                   </div>
+                                {% endfor %}
+                            {% endif %}
+
+                            <div class="catalog-section__send-review__wrapper">
+                                <div class="to-none">{{ form.item }}</div>
+                                <div class="catalog-section__send-review__name-block">
+                                    <label for="{{ form.name.id_for_label }}">{{form.name.label}}</label>
+                                    {% if request.user.is_authenticated %}
+                                        <div class="simulated-input">{{ form.name.initial }}</div>
+                                    {% endif %}
+                                        {{form.name}}
+                                        <div class="to-none">{{ form.buyer }}</div>
+                                        <div class="to-none">{{ form.to_review }}</div>
+
+                                    {% if form.name.errors %}
+                                        {% for error in form.name.errors %}
+                                            <div class="register-section__password-requirements errors-block">
+                                                <img src="{% static 'shop/icons/password-error.png' %}" class="error-password-image mr-6">
+                                                <span class="error-register-message">{{ error }}</span>
+                                           </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+
+                                <div class="catalog-section__send-review__email-block">
+                                    <label for="{{ form.email.id_for_label }}">{{form.email.label}}</label>
+                                     {% if request.user.is_authenticated %}
+                                        <div class="simulated-input">{{ form.email.initial }}</div>
+                                    {% endif %}
+                                    {{form.email}}
+
+
+                                    {% if form.email.errors %}
+                                        {% for error in form.email.errors %}
+                                             <div class="register-section__password-requirements errors-block">
+                                                <img src="{% static 'shop/icons/password-error.png' %}" class="error-password-image mr-6">
+                                                <span class="error-register-message">{{ error }}</span>
+                                             </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+
+                                <div class="catalog-section__send-review__text-block">
+                                    <label for="{{form.content.id_for_label}}">{{form.content.label}}</label>
+                                    {{form.content}}
+                                    {% if form.content.errors %}
+                                        {% for error in form.content.errors %}
+                                             <div class="register-section__password-requirements errors-block">
+                                                <img src="{% static 'shop/icons/password-error.png' %}" class="error-password-image mr-6">
+                                                <span class="error-register-message">{{ error }}</span>
+                                             </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                                <button type="submit" class="catalog-section__send-review__button">Опубликовать</button>
+                            </div>
+                        </form>
+                    </div>
+
+
+                </div>
+
+        </div>
+
+    </div>
+{% endblock %}
